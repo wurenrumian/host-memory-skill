@@ -1,6 +1,6 @@
 ---
 name: host-memory
-description: 主机级、按目录 + 标签分片的记忆架构，只含三样东西：index（索引：scope/tag → slug）、rules（稳定）、logs（追加）。加载后先读 index，按当前目录做最长前缀匹配，或按标签跨目录命中，只读命中的 rules/logs，绝不遍历。默认 store 在 ~/host-memory，内容由用户自行配置。用于"了解某目录/项目是什么、怎么操作、怎么维护""记一条观察/待办""巡检本机""配置同步 / chezmoi / 备份"这类需要主机级按目录与主题记忆的场合。Host-wide, directory- and tag-partitioned memory (index + rules + logs); progressive disclosure; read only matching entries.
+description: 主机级、按目录 + 标签分片的记忆架构，只含三样东西：index（索引：scope/tag → slug）、rules（稳定）、logs（追加）。加载后先读 index，按当前目录或标签命中 slug，只读命中的 rules/logs，绝不遍历。默认 store 在 ~/host-memory，内容由用户自行配置。用于"了解某目录/项目是什么、怎么操作、怎么维护""记一条观察/待办""巡检本机""配置同步 / chezmoi / 备份"这类需要主机级按目录与主题记忆的场合。Host-wide, directory- and tag-partitioned memory (index + rules + logs); progressive disclosure; read only matching entries.
 ---
 
 # Host Memory
@@ -29,16 +29,9 @@ skill 只管这套架构；具体记什么由用户自己配置。
 ## 加载后立刻做
 
 1. 读 `INDEX.md`，不存在就当空。
-2. **目录命中**：按当前目录做最长前缀匹配，得到 slug。
-3. **标签命中**：任务若是主题导向（"配置同步""备份""WSL"），在 INDEX 里按标签匹配，得到额外 slug。
-4. 只读命中 slug 的 `rules/<slug>.md`；要看脉络 / 待办，再读 `logs/<slug>.md` 的尾部。
-5. **不读**未命中的 slug，**不遍历** `rules/`、`logs/`——标签只查 INDEX，不翻正文。
-
-### 匹配规则
-
-- 目录：归一化路径后按**目录段**做最长前缀匹配：`D:\Project` 命中 `D:\Project\a`，但不命中 `D:\Projects`；没命中就回退到最近的祖先条目。
-- 标签：在 INDEX 里做相等 / 子串匹配，一个任务可命中多条。
-- 都没命中就当无记忆；命中的文件缺失即跳过，不报错、不猜。
+2. 按**当前目录**命中 slug；主题导向的任务再按标签命中。
+3. 只读命中 slug 的 `rules/<slug>.md`；要看脉络 / 待办，再读 `logs/<slug>.md` 的尾部。
+4. **不读**未命中的 slug，**不遍历** `rules/`、`logs/`——标签只查 INDEX，不翻正文。
 
 ## 写入
 
