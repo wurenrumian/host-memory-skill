@@ -1,6 +1,6 @@
 ---
 name: host-memory
-description: 主机级、按目录 + 标签分片的记忆架构，只含三样东西：index（索引：scope/tag → slug）、rules（稳定）、logs（追加）。加载后先读 index，按当前目录或标签命中 slug，只读命中的 rules/logs，绝不遍历。默认 store 在 ~/host-memory，内容由用户自行配置。用于"了解某目录/项目是什么、怎么操作、怎么维护""记一条观察/待办""巡检本机""配置同步 / chezmoi / 备份"这类需要主机级按目录与主题记忆的场合。Host-wide, directory- and tag-partitioned memory (index + rules + logs); progressive disclosure; read only matching entries.
+description: 主机级、按目录 + 标签分片的记忆（index / rules / logs 三层），默认存在 ~/host-memory，内容自配。当需要"了解某目录或项目是什么、怎么操作、怎么维护""记一条观察 / 待办 / 结论""巡检本机""配置同步 / chezmoi / 备份""记忆太长、该压实了"时使用。加载后先读 index，按当前目录或标签命中 slug，只读命中的 rules/logs，绝不遍历。Host-wide, directory- and tag-partitioned memory (index + rules + logs); progressive disclosure; logs compaction.
 ---
 
 # Host Memory
@@ -9,7 +9,7 @@ description: 主机级、按目录 + 标签分片的记忆架构，只含三样�
 
 - `index` —— 索引：把 scope（目录）和 tag（标签）映射到 slug。**加载后第一件事就是读它。**
 - `rules/<slug>.md` —— 稳定：是什么、怎么操作、怎么维护。
-- `logs/<slug>.md` —— 追加：发生过什么、要做什么（todo 直接写成一行，不另开文件）。
+- `logs/<slug>.md` —— 追加：发生过什么、要做什么（todo 直接写成一行，不另开文件）。积累到一定程度就**压实**（见下）。
 
 目录用于"人在哪"自动命中；标签用于"事属于谁"跨目录命中。
 
@@ -41,6 +41,20 @@ skill 只管这套架构；具体记什么由用户自己配置。
 - 跨目录共性归最近的祖先 slug；整机级的归 `host-<host>`。
 - **只读不建**；只有写入才创建文件。
 - 只记**入口与位置**，不记密钥 / token / 密码明文。
+
+## 压实（压缩 logs）
+
+logs 只追加，会越积越长；读起来贵、噪声也大。压实把它重新收窄：**把仍有效的上提进 rules，把过时的删掉，只留近期脉络。**
+
+- **只压实命中过的 slug**，绝不为压实去遍历。
+- 稳定事实（仍适用的"是什么 / 怎么操作 / 怎么维护"）上提到 `rules/<slug>.md`；已完成的 todo、被推翻的结论、纯过程流水，删。
+- **未完成 todo 一律保留**；拿不准还算不算有效的行，宁可留。
+- 近期一段（比如最近几次记录）原样留着，当作脉络，不要清到只剩标记。
+- 结尾追加一行压实标记，压了多少说清楚：
+  ```markdown
+  - 2026-10-05 14:20 compact  32 行 → 9 行；上提 4 条到 rules
+  ```
+- 压实是**唯一**允许重写 `logs/<slug>.md` 的操作；其余情况仍然只追加。INDEX 不因压实改动。
 
 ## 命名与标签
 
