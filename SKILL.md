@@ -1,6 +1,6 @@
 ---
 name: host-memory
-description: 主机级、按目录 + 标签分片的记忆（index / rules / logs 三层），默认存在 ~/host-memory，内容自配。当需要"了解某目录或项目是什么、怎么操作、怎么维护""记一条观察 / 待办 / 结论""巡检本机""配置同步 / chezmoi / 备份""记忆太长、该压实了"时使用。加载后先读 index，按当前目录或标签命中 slug，只读命中的 rules/logs，绝不遍历。Host-wide, directory- and tag-partitioned memory (index + rules + logs); progressive disclosure; logs compaction.
+description: 主机级、按目录 + 标签分片的记忆（INDEX / rules / logs 三层），默认在 ~/host-memory。当需要了解某目录或项目是什么、怎么操作、怎么维护，或要记一条观察 / 待办 / 结论、巡检本机、配置同步 / chezmoi / 备份、压实过长记忆时使用。加载后先读 index，只读命中的 slug，绝不遍历。Host-wide, directory- and tag-partitioned memory with progressive disclosure.
 ---
 
 # Host Memory
