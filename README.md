@@ -8,13 +8,15 @@
 - `rules/<slug>.md` —— 稳定：是什么、怎么操作、怎么维护。
 - `logs/<slug>.md` —— 追加：发生过什么、要做什么（todo 写成一行，不另开文件）。
 
+零碎东西不另起名字：统一进一个固定的收纳 slug **`misc`**，INDEX 里那行的说明只写"现在里面都有啥"。
+
 目录用于"人在哪"自动命中；标签用于"事属于谁"跨目录命中。skill 只管架构，具体记什么由用户决定。
 
 ```
 ~/host-memory/
-├── INDEX.md          # 索引：scope / tag → slug
-├── rules/<slug>.md
-└── logs/<slug>.md
+├── INDEX.md          # 索引：scope / tag → slug（含一行固定的 misc 摘要）
+├── rules/<slug>.md   # 杂项固定用 rules/misc.md
+└── logs/<slug>.md    # 杂项固定用 logs/misc.md
 ```
 
 ## 何时用
@@ -34,6 +36,7 @@
 ## 写入与压实
 
 - 稳定知识 → `rules/`；观察 / 运维结果 / todo → `logs/` 追加一行。
+- 不够格单独成 slug 的零碎 → 固定进 `misc`（`rules/misc.md` + `logs/misc.md`），**不新建 slug**；写完后更新 INDEX 里 `misc` 那行的摘要，让人不点进去就知道里面有什么。
 - 新建记忆先在 `INDEX.md` 加一行，再建文件；**只读不建**，写入才创建文件。
 - 只记**入口与位置**，不记密钥 / token / 密码明文。
 - **压实**只对命中过的 slug 做：把仍有效的上提进 `rules/`，过时的删掉，未完成 todo 一律保留，近期一段原样留作脉络；结尾追加一行压实标记。压实是唯一允许重写 `logs/` 的操作。
